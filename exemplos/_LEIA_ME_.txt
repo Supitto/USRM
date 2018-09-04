@@ -1,0 +1,6 @@
+Arquivos exemplos para o trabalho 1.
+
+*.in: Entradas que serão fornecidas ao programa, na ordem em que aparecem.
+*.dat: Arquivos binários gerados no formato especificado.
+*.lst: Descrição dos arquivos .dat, reportando seu conteúdo bloco a bloco.
+*.out: Saídas produzidas pelas buscas.
