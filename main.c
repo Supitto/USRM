@@ -25,7 +25,7 @@ int retorna_campo(int);
 int main(void)
 {
 	//Recebe o nome do arquivo
-	//fprintf(stderr,"Qual o nome do arquivo a ser gravado (sem extensão): ");
+	fprintf(stderr,"Qual o nome do arquivo a ser gravado (sem extensão): ");
 	fgets(text_buffer, 198, stdin);
 	remove_last_char(text_buffer);
 	
@@ -106,6 +106,7 @@ int main(void)
 			fprintf(stderr, "Qual RA voce quer pesquisar : ");
 			fgets(ra, 198, stdin);
 			remove_last_char(ra);
+			//remove_last_char(text_buffer);
 			int block_offset=0, inner_offset=0, bytes_lidos, guardiao_achou=0;
 			do
 			{
@@ -116,16 +117,18 @@ int main(void)
 				{
 					inner_offset = retorna_registro(inner_offset);
 					inner_offset = retorna_campo(inner_offset);
-					if(strcmp(text_buffer, ra) == 0)
+					if(strcmp(text_buffer, ra) == 0) 
 					{
+						printf("\nAchamos o ra\n");
+						fprintf(stderr, "\nText_buffer = %s\n", text_buffer);
 						guardiao_achou=1;
-						fprintf(stdout, "%s:", text_buffer);
+						fprintf(stderr, "%s:", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
-						fprintf(stdout, "%s:", text_buffer);
+						fprintf(stderr, "%s:", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
-						fprintf(stdout, "%s:", text_buffer);
+						fprintf(stderr, "%s:", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
-						fprintf(stdout, "%s\n", text_buffer);
+						fprintf(stderr, "%s\n", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
 					}
 				}while(record_buffer[0] != 0 && guardiao_achou == 0);
@@ -136,7 +139,7 @@ int main(void)
 			}while(bytes_lidos == 512 && guardiao_achou == 0);
 			if(guardiao_achou == 0)
 			{
-				fprintf(stdout, "*\n");
+				fprintf(stderr, "*\n");
 			}
 		}
 
@@ -231,10 +234,10 @@ int retorna_campo(int offset)
 		for(i = 0; i < 200; i++) text_buffer[i] = 0;
 	}
 	int counter=0;
-	for(; ((record_buffer[offset] != separador_13 || record_buffer[offset] != separador_10) && offset < 512) && offset != 0; offset++);
+	for(; ((record_buffer[offset] != separador_13 || record_buffer[offset] != separador_10) && offset < 512) && offset > 0; offset++);
 	if(offset != 512)
 	{
-		for(counter = 0; record_buffer[offset+counter+1] != separador_13; counter++)
+		for(counter = 0; record_buffer[offset+counter] != separador_13; counter++)
 		{
 			//fprintf(stderr,"%c",record_buffer[offset+counter+1]);
 			text_buffer[counter] = record_buffer[offset+counter]; 
