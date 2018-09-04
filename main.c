@@ -124,7 +124,6 @@ int main(void)
 						inner_offset = retorna_campo(inner_offset);
 						fprintf(stdout, "%s\n", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
-						break
 					}
 				}while(record_buffer[0] != 0 && guardiao_achou == 0);
 				if(guardiao_achou==1) 
@@ -132,7 +131,7 @@ int main(void)
 					rewind(file);
 				}
 			}while(bytes_lidos == 512 && guardiao_achou == 0);
-			if(guardiao_lido == 0)
+			if(guardiao_achou == 0)
 			{
 				fprintf(stdout, "*\n");
 			}
