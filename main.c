@@ -10,8 +10,8 @@ char record_buffer [510];
 char text_buffer [200];
 char file_name [205];
 
-char separa_campo [2] = {'|', '\0'};
-char termina_registro [2] = {'#', '\0'};
+char separa_campo [2] = {13, '\0'};
+char termina_registro [2] = {10, '\0'};
 
 void append(char *, char *);
 void grava_registro(int);
@@ -103,7 +103,7 @@ int main(void)
 			fprintf(stderr, "Qual RA voce quer pesquisar : ");
 			fgets(ra, 198, stdin);
 			remove_last_char(ra);
-			int block_offset=0, inner_offset=0, bytes_lidos;
+			int block_offset=0, inner_offset=0, bytes_lidos, guardiao_achou=0;
 			do
 			{
 				
@@ -115,18 +115,27 @@ int main(void)
 					inner_offset = retorna_campo(inner_offset);
 					if(strcmp(text_buffer, ra) == 0)
 					{
+						guardiao_achou=1;
 						fprintf(stdout, "%s:", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
-						printf(stdout, "%s:", text_buffer);
+						fprintf(stdout, "%s:", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
-						printf(stdout, "%s:", text_buffer);
+						fprintf(stdout, "%s:", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
-						printf(stdout, "%s\n", text_buffer);
+						fprintf(stdout, "%s\n", text_buffer);
 						inner_offset = retorna_campo(inner_offset);
+						break
 					}
-
-				}while(record_buffer[0] != 0);
-			}while(bytes_lidos == 512);
+				}while(record_buffer[0] != 0 && guardiao_achou == 0);
+				if(guardiao_achou==1) 
+				{
+					rewind(file);
+				}
+			}while(bytes_lidos == 512 && guardiao_achou == 0);
+			if(guardiao_lido == 0)
+			{
+				fprintf(stdout, "*\n");
+			}
 		}
 
 	}
