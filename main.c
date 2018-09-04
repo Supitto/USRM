@@ -2,6 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define separador_13 '|'
+#define separador_10 '#'
+
 FILE * file;
 char memory_block [512];
 int bytes_ocupados = 0;
@@ -10,8 +13,8 @@ char record_buffer [510];
 char text_buffer [200];
 char file_name [205];
 
-char separa_campo [2] = {13, '\0'};
-char termina_registro [2] = {10, '\0'};
+char separa_campo [2] = {separador_13, '\0'};
+char termina_registro [2] = {separador_10, '\0'};
 
 void append(char *, char *);
 void grava_registro(int);
@@ -206,17 +209,19 @@ int retorna_registro(int offset)
 		int i;
 		for(i = 0; i < 512; i++) record_buffer[i] = 0;
 	}
-	for(; (memory_block[offset] != '#' && offset < 512) && offset !=0; offset++){fprintf(stderr,".");}
-	int counter;
+	for(; (memory_block[offset] != separador_10 && offset < 512) && offset !=0; offset++);//{fprintf(stderr,".");}
+	int counter=0;
 	if(offset != 512)
 	{
-		for(counter = 0; memory_block[offset+counter+1] != '#' &&						memory_block[offset+counter+1] != '\0' &&
-					offset + counter < 510; counter++)
+		for(counter = 0; memory_block[offset+counter] != separador_10 &&						
+			memory_block[offset+counter+1] != '\0' &&
+			offset + counter < 510; counter++)
 		{
-			record_buffer[counter] = memory_block[offset+counter+1]; 
+			record_buffer[counter] = memory_block[offset+counter]; 
 		}
 	}
-	return counter;
+	fprintf(stderr, "\n%s\n", record_buffer);
+	return offset;
 }
 
 int retorna_campo(int offset)
@@ -225,15 +230,16 @@ int retorna_campo(int offset)
 		int i;
 		for(i = 0; i < 200; i++) text_buffer[i] = 0;
 	}
-	int counter;
-	for(; ((record_buffer[offset] != '|' || record_buffer[offset] != '#') && offset < 512) && offset != 0; offset++);
+	int counter=0;
+	for(; ((record_buffer[offset] != separador_13 || record_buffer[offset] != separador_10) && offset < 512) && offset != 0; offset++);
 	if(offset != 512)
 	{
-		for(counter = 0; record_buffer[offset+counter+1] != '|'; counter++)
+		for(counter = 0; record_buffer[offset+counter+1] != separador_13; counter++)
 		{
-			fprintf(stderr,"%c",record_buffer[offset+counter+1]);
-			text_buffer[counter] = record_buffer[offset+counter+1]; 
+			//fprintf(stderr,"%c",record_buffer[offset+counter+1]);
+			text_buffer[counter] = record_buffer[offset+counter]; 
 		}
 	}
-	return offset+counter+1;
+	return offset+counter;
 }
+
